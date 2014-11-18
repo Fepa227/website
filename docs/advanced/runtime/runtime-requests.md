@@ -41,37 +41,37 @@ em seguida, se o processador suporta SSE2 e o método:
 
 existindo, seria usado em seu lugar.
 
-Estruturas como SIMD Wrappers
+Estruturas envolvidas em SIMD
 -----------------------------
 
-When producing nice APIs, it's often useful to wrap the SIMD intrinsic types structs with a cleaner and more specific API for a specific use, for example a Quaternion that wraps a Vector4f field. Unfortunately, the JIT currently generates horrible code for such cases, as it does not deal well with the indirection, especially when combined with the SSE intrinsics.
+Quando são produzidos bons APIs, muitas vezes é útil envolver o SIMD com tipos intrínsecos de estruturas de API mais limpas e mais específicas para uma finalidade certa, por exemplo, um Quaternion que envolve um campo Vector4f. Infelizmente, o JIT atualmente gera um código horrível para esses casos, uma vez que não lida bem indiretamente, especialmente quando combinada com SSE intrinsecos.
 
-For examples of the code generated, see [https://bugzilla.novell.com/show_bug.cgi?id=662127](https://bugzilla.novell.com/show_bug.cgi?id=662127)
+Para exemplos de código gerados, consulte [https://bugzilla.novell.com/show_bug.cgi?id=662127](https://bugzilla.novell.com/show_bug.cgi?id=662127)
 
-Ref overloads in Mono.Simd
---------------------------
+Referencias sobre sobrecargas em Mono.Simd
+------------------------------------------
 
-Provide ref overloads for all the methods in Mono.Simd, since when it falls back to non-intrinsic implementations, passing large structs by ref is usually much faster than passing them by value.
+Fornece referências de sobrecargas para todos os métodos em Mono.SIMD, desde implementações não-intrínsecas, passando por grandes estruturas, é geralmente muito mais rápido do que passá-los por valores.
 
-SSE Floating Point on x86
+Ponto Flutuante SSE em x86
 -------------------------
 
-We should use SSE for floating-point math on x86, like we do on x86-64, instead of using the x87 FPU as we do now.
+Devemos usar matemática de ponto flutuante SSE em x86, como fazemos em x86-64, em vez de usar o FPU x87, como fazemos agora.
 
-Optimization Hinting
+Otimizando a indução
 ====================
 
-ABC disabling
--------------
+ABC desabilitado
+----------------
 
-Add an attribute (maybe MonoMethodImpl) to disable array bounds checking in specific methods. This would allow it to be disabled in audited library code while still keeping it in user code. Obviously this would only be permitted for unsafe methods.
+Adicionar um atributo (talvez MonoMethodImpl) para desativar limites de matriz em métodos específicos. Isso permitiria que ele seja desativado no código da biblioteca, mantendo-o no código do usuário. Obviamente, isso só seria permitido para métodos não-seguros.
 
-Branch hinting
+Branch induzido
 --------------
 
-Add JIT intrinsics for branch hinting, for tuning code such as that which uses Mono.Simd.
+Adicionar JIT intrinsecospara branch induzido, para ajustar o código como usado no Mono.Simd.
 
-Data Prefetch
+Dados Prefetch
 -------------
 
 JIT intrinsics for data prefetch instructions. Useful combined with Mono.Simd.
