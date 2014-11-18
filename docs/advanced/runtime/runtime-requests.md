@@ -7,42 +7,42 @@ redirect_from:
 SIMD
 ====
 
-Alignment
----------
+Alinhamento
+-----------
 
-Handle SIMD objects in structures better, so they get properly aligned by default, otherwise we suffer some performance problems, such as use of unaligned loads, and confusing 10x perf differences caused by random alignment.
+É importante manipular objetos SIMD em uma boa estruturas para que eles fiquem com padrão devidamente alinhados, caso contrário, sofrerá alguns problemas de desempenho, tais como a utilização de cargas desordenadas, causando 10x mais diferenças devido ao alinhamento aleatório.
 
 ABI
 ---
 
-Would it be possible to pass SIMD arguments in the SIMD registers on Intel?
+Seria possível passar argumentos SIMD nos registradores SIMD na Intel?
 
-=\> This is possible, but largely useless until we rewrite the register allocator.
+=\> Isso é possível, mas desaconselhável até nós reescrevermos o alocador de registro.
 
-Ports
------
+Portas
+------
 
-Would like to have LLVM/ARM support SIMD (NEON), as this would help us in MonoTouch. Perhaps we need the same on MonoJIT/ARM for other platforms like Android.
+Gostaria de ter LLVM / ARM suportado pelo SIMD (NEON), pois isso nos ajudaria no MonoTouch. Talvez tenhamos o mesmo em MonoJIT / ARM para outras plataformas como o Android.
 
-It would be good to support PowerPC SIMD (AltiVec) for platforms like PS3.
+Seria bom para apoiar PowerPC SIMD (AltiVec) para plataformas como PS3.
 
-Newer x86 processors (Intel Sandy Bridge & AMD Bulldozer) introduce another SIMD extension called AVX, and it would be good to support that too.
+Processadores x86 mais novos (Intel Sandy Bridge e AMD Bulldozer) introduzem uma outra extensão SIMD chamada AVX, e seria bom o suporte para isso também.
 
-Per-arch Method Implementations
--------------------------------
+Implementações de método
+------------------------
 
-Since many SIMD instructions on exist in one specific instruction set or instruction set extension, it would be useful to have a way to have different versions of a method for different architectures, for example one for SSE1, another for SSE2, and another for NEON. Perhaps this could be done with an attribute and an encoded method name suffix, for example
+Uma vez que muitas instruções SIMD existem em um conjunto de instruções especificas ou na extensão do conjunto de instruções, seria útil ter uma maneira de ter diferentes versões de um método para diferentes arquiteturas, por exemplo um para SSE1, outro para SSE2, e outro para NEON. Talvez isso poderia ser feito com um atributo e um nome de método sufixo codificado, por exemplo:
 
      [MonoMethodImpl(MethodImplOptions.ArchSpecific)] void Foo ()
 
-then if the processor supports SSE2 and the method
+em seguida, se o processador suporta SSE2 e o método:
 
      void Foo_Sse2 ()
 
-exists, it would be used instead.
+existindo, seria usado em seu lugar.
 
-Struct as SIMD Wrappers
------------------------
+Estruturas como SIMD Wrappers
+-----------------------------
 
 When producing nice APIs, it's often useful to wrap the SIMD intrinsic types structs with a cleaner and more specific API for a specific use, for example a Quaternion that wraps a Vector4f field. Unfortunately, the JIT currently generates horrible code for such cases, as it does not deal well with the indirection, especially when combined with the SSE intrinsics.
 
